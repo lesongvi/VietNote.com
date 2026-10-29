@@ -1,5 +1,10 @@
 <script setup lang="ts">
+import { Mic, Sparkles, MessageSquare, Languages, Globe, CircleCheck, LoaderCircle, Circle } from 'lucide-vue-next'
+
 const { t, locale, toggle } = useCopy()
+
+const featureIcons = { mic: Mic, sparkles: Sparkles, message: MessageSquare, languages: Languages } as const
+const stepIcons = { done: CircleCheck, now: LoaderCircle, '': Circle } as const
 </script>
 
 <template>
@@ -11,7 +16,9 @@ const { t, locale, toggle } = useCopy()
         <a href="#progress">{{ t.navProgress }}</a>
         <a href="#join">{{ t.navJoin }}</a>
       </nav>
-      <button class="pill-btn" type="button" @click="toggle">{{ locale === 'vi' ? 'EN' : 'VI' }}</button>
+      <button class="pill-btn" type="button" :aria-label="locale === 'vi' ? 'Switch to English' : 'Chuyển sang tiếng Việt'" @click="toggle">
+        <Globe :size="16" aria-hidden="true" /> {{ locale === 'vi' ? 'EN' : 'VI' }}
+      </button>
     </header>
 
     <main>
@@ -50,7 +57,7 @@ const { t, locale, toggle } = useCopy()
         <p>{{ t.fSub }}</p>
         <div class="grid">
           <article v-for="f in t.feats" :key="f.t" class="feat">
-            <div class="ico">{{ f.i }}</div>
+            <div class="ico"><component :is="featureIcons[f.i as keyof typeof featureIcons]" :size="24" :stroke-width="1.75" aria-hidden="true" /></div>
             <h3>{{ f.t }}</h3>
             <p>{{ f.d }}</p>
           </article>
@@ -62,7 +69,7 @@ const { t, locale, toggle } = useCopy()
         <p>{{ t.pSub }}</p>
         <div class="progress">
           <div v-for="s in t.steps" :key="s.t" class="step" :class="s.s">
-            <span class="dot" /><div><b>{{ s.t }}</b><span>{{ s.d }}</span></div>
+            <component :is="stepIcons[s.s as keyof typeof stepIcons]" class="step-ico" :size="20" aria-hidden="true" /><div><b>{{ s.t }}</b><span>{{ s.d }}</span></div>
           </div>
         </div>
       </section>
