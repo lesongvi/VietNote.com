@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'vi' },
-      title: 'VietNote — Ghi chú họp bằng tiếng Việt (đang xây dựng)',
+      title: 'VietNote - Ghi chú họp bằng tiếng Việt (đang xây dựng)',
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         {
@@ -18,7 +18,7 @@ export default defineNuxtConfig({
           content:
             'VietNote đang được xây dựng: biến cuộc họp, bài giảng và video thành ghi chú tiếng Việt thông minh. Đăng ký để được dùng thử sớm.',
         },
-        { property: 'og:title', content: 'VietNote — Ghi chú AI cho tiếng Việt' },
+        { property: 'og:title', content: 'VietNote - Ghi chú AI cho tiếng Việt' },
         { property: 'og:description', content: 'Nghe. Hiểu. Hành động. Sắp ra mắt.' },
         { name: 'theme-color', content: '#f5f0e6' },
       ],

@@ -74,7 +74,7 @@ const copy = {
       decisionsList: ['Chốt {deadline} vào thứ Sáu.'],
       todosTitle: 'Việc cần làm',
       todos: ['Lan: gửi bản thiết kế cuối (trước thứ Sáu)', 'Cả nhóm: review {sprint} (tuần sau)'],
-      caveat: 'Ví dụ minh hoạ để mô tả cách hoạt động, không phải kết quả thật của sản phẩm.',
+      caveat: 'Ví dụ minh hoạ để mô tả cách hoạt động.',
     },
     features: {
       num: '03',
