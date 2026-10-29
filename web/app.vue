@@ -1,42 +1,40 @@
 <script setup lang="ts">
-import {
-  ArrowRight, AudioLines, Check, CircleCheck, Circle, FileText, GraduationCap, Globe, Languages,
-  LoaderCircle, MessageSquare, Mic, Monitor, Puzzle, Search, Sparkles, Users, Video, Zap, ArrowRightCircle,
-} from 'lucide-vue-next'
+import { ArrowRight, Globe } from 'lucide-vue-next'
+import { MAKER_LINKS } from '~/composables/useCopy'
 
 const { t, locale, toggle } = useCopy()
 
-const icons = {
-  mic: Mic, sparkles: Sparkles, message: MessageSquare, languages: Languages, puzzle: Puzzle,
-  monitor: Monitor, users: Users, graduation: GraduationCap, video: Video, file: FileText,
-  check: Check, audio: AudioLines, zap: Zap, search: Search,
-} as const
-type IconKey = keyof typeof icons
-
-const stepIcons = { done: CircleCheck, now: LoaderCircle, next: ArrowRightCircle, plan: Circle } as const
-type StepKey = keyof typeof stepIcons
+// "{deadline}" -> highlighted English term
+function parts(text: string) {
+  return text.split(/(\{[^}]+\})/).filter(Boolean).map((p) => ({ en: p.startsWith('{'), text: p.replace(/[{}]/g, '') }))
+}
 </script>
 
 <template>
   <div class="page">
     <a class="skip" href="#main">{{ t.skip }}</a>
 
-    <header class="site-header">
+    <div class="topstrip">
+      <div class="wrap"><MakerLine arrow /></div>
+    </div>
+
+    <header class="masthead">
       <div class="wrap bar">
         <a class="logo" href="#top" aria-label="VietNote">
-          <span class="logo-mark"><AudioLines :size="18" :stroke-width="2.25" aria-hidden="true" /></span>
-          VietNote
+          <span class="seal" aria-hidden="true">V</span>
+          <span class="wordmark">VietNote</span>
         </a>
         <nav class="nav-links" aria-label="Main">
+          <a href="#why">{{ t.nav.why }}</a>
+          <a href="#example">{{ t.nav.example }}</a>
           <a href="#features">{{ t.nav.features }}</a>
-          <a href="#how">{{ t.nav.how }}</a>
           <a href="#progress">{{ t.nav.progress }}</a>
         </nav>
         <div class="bar-actions">
-          <button class="btn btn-ghost btn-sm" type="button" :aria-label="t.langLabel" @click="toggle">
+          <button class="lang" type="button" :aria-label="t.langLabel" @click="toggle">
             <Globe :size="15" aria-hidden="true" /> {{ locale === 'vi' ? 'EN' : 'VI' }}
           </button>
-          <a class="btn btn-primary btn-sm" href="#join">{{ t.nav.join }}</a>
+          <a class="link-cta" href="#join">{{ t.nav.join }}</a>
         </div>
       </div>
     </header>
@@ -46,132 +44,139 @@ type StepKey = keyof typeof stepIcons
       <section id="top" class="hero">
         <div class="wrap hero-grid">
           <div class="hero-copy">
-            <p class="eyebrow">
-              <span class="eyebrow-mark" aria-hidden="true" />{{ t.hero.eyebrow }}
-              <span class="status-tag">{{ t.hero.status }}</span>
-            </p>
-            <h1>{{ t.hero.h1a }} <span class="accent">{{ t.hero.h1b }}</span></h1>
+            <p class="issue"><span class="issue-dot" aria-hidden="true" />{{ t.hero.issue }}</p>
+            <h1>
+              {{ t.hero.h1a }}
+              <span class="scribble"><em>{{ t.hero.h1em }}</em>
+                <svg viewBox="0 0 220 14" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9 C 30 2, 58 12, 100 6 S 178 2, 217 8" /></svg>
+              </span>
+              {{ t.hero.h1b }}
+            </h1>
             <p class="lead">{{ t.hero.lead }}</p>
             <div id="join" class="hero-form"><WaitlistForm /></div>
+            <p class="platforms">
+              <span>{{ t.hero.platformsLabel }}</span>
+              <b v-for="p in t.hero.platforms" :key="p">{{ p }}</b>
+            </p>
           </div>
-          <ProductMock />
-        </div>
-
-        <div class="wrap">
-          <dl class="stats">
-            <div v-for="s in t.hero.stats" :key="s.t" class="stat">
-              <dt><span class="stat-n">{{ s.n }}</span> {{ s.t }}</dt>
-              <dd>{{ s.d }}</dd>
-            </div>
-          </dl>
+          <NotePage />
         </div>
       </section>
 
       <!-- Why -->
-      <section class="section">
-        <div class="wrap">
-          <SectionHead :eyebrow="t.why.eyebrow" :title="t.why.title" />
-          <div class="why-grid">
-            <article v-for="(it, i) in t.why.items" :key="it.t" class="card why-card">
-              <p class="num">{{ String(i + 1).padStart(2, '0') }}</p>
-              <h3>{{ it.t }}</h3>
-              <p>{{ it.d }}</p>
-              <p class="card-foot"><span class="tag">{{ it.tag }}</span></p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <!-- How it works -->
-      <section id="how" class="section section-tint">
-        <div class="wrap">
-          <SectionHead :eyebrow="t.how.eyebrow" :title="t.how.title" />
-          <div class="flow">
-            <div class="flow-col">
-              <p class="flow-label">{{ t.how.sourcesLabel }}</p>
-              <div v-for="s in t.how.sources" :key="s.t" class="flow-node">
-                <component :is="icons[s.i as IconKey]" :size="18" aria-hidden="true" /> {{ s.t }}
+      <section id="why" class="section">
+        <div class="wrap split">
+          <SectionHead :num="t.why.num" :label="t.why.label" :title="t.why.title" />
+          <ol class="principles">
+            <li v-for="(it, i) in t.why.items" :key="it.t">
+              <span class="p-num" aria-hidden="true">{{ i + 1 }}</span>
+              <div>
+                <h3>{{ it.t }}</h3>
+                <p>{{ it.d }}</p>
+                <p class="tagline">{{ it.tag }}</p>
               </div>
-            </div>
-            <div class="flow-link" aria-hidden="true"><ArrowRight :size="20" /></div>
-            <div class="flow-hub">
-              <span class="flow-hub-icon"><AudioLines :size="28" :stroke-width="2" aria-hidden="true" /></span>
-              <strong>{{ t.how.hub.t }}</strong>
-              <span>{{ t.how.hub.d }}</span>
-            </div>
-            <div class="flow-link" aria-hidden="true"><ArrowRight :size="20" /></div>
-            <div class="flow-col">
-              <p class="flow-label">{{ t.how.outputsLabel }}</p>
-              <div v-for="o in t.how.outputs" :key="o.t" class="flow-node">
-                <component :is="icons[o.i as IconKey]" :size="18" aria-hidden="true" /> {{ o.t }}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Product depth -->
-      <section id="features" class="section">
-        <div class="wrap">
-          <SectionHead :eyebrow="t.product.eyebrow" :title="t.product.title" :lead="t.product.lead" />
-          <div class="module-grid">
-            <article v-for="m in t.product.modules" :key="m.t" class="card module">
-              <div class="module-top">
-                <span class="icon-tile"><component :is="icons[m.i as IconKey]" :size="20" :stroke-width="1.75" aria-hidden="true" /></span>
-                <span class="tag">{{ m.tag }}</span>
-              </div>
-              <h3>{{ m.t }}</h3>
-              <p>{{ m.d }}</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <!-- Blue band with dashboard -->
-      <section class="band on-blue">
-        <div class="wrap">
-          <SectionHead :eyebrow="t.band.eyebrow" :title="t.band.title" :lead="t.band.lead" />
-          <ProductMock full class="band-mock" />
-          <ul class="band-points">
-            <li v-for="p in t.band.points" :key="p.t">
-              <component :is="icons[p.i as IconKey]" :size="20" aria-hidden="true" />
-              <div><strong>{{ p.t }}</strong><span>{{ p.d }}</span></div>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- Progress -->
-      <section id="progress" class="section">
-        <div class="wrap">
-          <SectionHead :eyebrow="t.progress.eyebrow" :title="t.progress.title" :lead="t.progress.lead" />
-          <ol class="steps">
-            <li v-for="s in t.progress.steps" :key="s.t" class="card step" :class="`is-${s.s}`">
-              <component :is="stepIcons[s.s as StepKey]" class="step-icon" :size="22" aria-hidden="true" />
-              <p class="step-status">{{ t.progress.status[s.s as StepKey] }}</p>
-              <p class="step-title">{{ s.t }}</p>
             </li>
           </ol>
         </div>
       </section>
 
-      <!-- Final CTA -->
-      <section class="band cta on-blue">
-        <div class="wrap cta-inner">
-          <h2>{{ t.cta.title }}</h2>
-          <p class="section-lead">{{ t.cta.lead }}</p>
+      <!-- Example: speech -> notes -->
+      <section id="example" class="section section-paper2">
+        <div class="wrap">
+          <SectionHead :num="t.example.num" :label="t.example.label" :title="t.example.title" :lead="t.example.lead" />
+          <div class="s2n">
+            <div class="s2n-col s2n-raw">
+              <p class="col-label">{{ t.example.spokenLabel }}</p>
+              <p class="spoken">
+                <template v-for="(s, i) in t.example.spoken" :key="i">
+                  <s class="filler">{{ s.filler }}</s>
+                  {{ ' ' }}<template v-for="(p, j) in parts(s.text)" :key="j"><mark v-if="p.en">{{ p.text }}</mark><template v-else>{{ p.text }}</template></template>{{ ' ' }}
+                </template>
+              </p>
+            </div>
+            <div class="s2n-arrow" aria-hidden="true"><ArrowRight :size="28" :stroke-width="1.5" /></div>
+            <div class="s2n-col s2n-clean">
+              <p class="col-label">{{ t.example.noteLabel }}</p>
+              <h3>{{ t.example.decisions }}</h3>
+              <ul>
+                <li v-for="d in t.example.decisionsList" :key="d">
+                  <template v-for="(p, j) in parts(d)" :key="j"><mark v-if="p.en">{{ p.text }}</mark><template v-else>{{ p.text }}</template></template>
+                </li>
+              </ul>
+              <h3>{{ t.example.todosTitle }}</h3>
+              <ul>
+                <li v-for="d in t.example.todos" :key="d">
+                  <template v-for="(p, j) in parts(d)" :key="j"><mark v-if="p.en">{{ p.text }}</mark><template v-else>{{ p.text }}</template></template>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <p class="caveat">{{ t.example.caveat }}</p>
+        </div>
+      </section>
+
+      <!-- Features ledger -->
+      <section id="features" class="section">
+        <div class="wrap">
+          <SectionHead :num="t.features.num" :label="t.features.label" :title="t.features.title" />
+          <ul class="ledger">
+            <li v-for="f in t.features.items" :key="f.t" :class="`is-${f.s}`">
+              <h3>{{ f.t }}</h3>
+              <p>{{ f.d }}</p>
+              <span class="status"><i aria-hidden="true" />{{ f.st }}</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Makers -->
+      <section class="makers">
+        <div class="wrap makers-grid">
+          <div>
+            <p class="section-label"><span class="section-num">{{ t.makerSection.num }}</span><span class="section-rule" aria-hidden="true" />{{ t.makerSection.label }}</p>
+            <p class="maker-big"><MakerLine /></p>
+          </div>
+          <div class="makers-side">
+            <p>{{ t.makerSection.body }}</p>
+            <ul>
+              <li v-for="m in MAKER_LINKS" :key="m.name">
+                <a :href="m.href" target="_blank" rel="noopener">{{ t.makerSection.visit }} {{ m.name }} <ArrowRight :size="16" aria-hidden="true" /></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Progress -->
+      <section id="progress" class="section">
+        <div class="wrap split">
+          <SectionHead :num="t.progress.num" :label="t.progress.label" :title="t.progress.title" />
+          <ol class="toc">
+            <li v-for="s in t.progress.steps" :key="s.t" :class="`is-${s.s}`">
+              <span class="toc-title">{{ s.t }}</span>
+              <span class="toc-leader" aria-hidden="true" />
+              <span class="status"><i aria-hidden="true" />{{ s.st }}</span>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="cta">
+        <div class="wrap cta-grid">
+          <div>
+            <h2>{{ t.cta.title }}</h2>
+            <p>{{ t.cta.lead }}</p>
+          </div>
           <WaitlistForm tone="dark" />
         </div>
       </section>
     </main>
 
-    <footer class="site-footer">
+    <footer class="colophon">
       <div class="wrap foot">
-        <a class="logo" href="#top" aria-label="VietNote">
-          <span class="logo-mark"><AudioLines :size="18" :stroke-width="2.25" aria-hidden="true" /></span>
-          VietNote
-        </a>
-        <p>{{ t.foot }}</p>
+        <span>{{ t.foot }}</span>
+        <MakerLine />
       </div>
     </footer>
   </div>
