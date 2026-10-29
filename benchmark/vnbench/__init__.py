@@ -1,0 +1,1 @@
+"""VietNote ASR benchmark harness."""

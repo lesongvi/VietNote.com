@@ -28,8 +28,8 @@ Phases 4 and 5 can overlap if there is a dedicated native engineer. Public launc
 **Exit:** vietnote.com is live and collecting emails with a measurable conversion rate.
 
 ## Phase 1 — ASR benchmark & wedge 🔄
-- ⬜ Collect and label 30–50 Vietnamese recordings (meetings, lectures, noise, accents, code-switching) with consent
-- ⬜ Build the evaluation harness (script computing WER, speed, cost per minute per provider)
+- 🔄 Collect and label 30–50 Vietnamese recordings (meetings, lectures, noise, accents, code-switching) with consent — guide in `benchmark/data/README.md`
+- ✅ Build the evaluation harness (`benchmark/`: WER/CER, code-switching accuracy, RTF, cost per minute, per-category report)
 - ⬜ Compare hosted providers and Whisper-family models (including Vietnamese fine-tunes); test diarization options
 - ⬜ Prototype summary + action-item prompts on the same set; score by hand
 - ⬜ Decide: provider(s), self-host vs. API, streaming approach, wedge confirmation

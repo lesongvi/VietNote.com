@@ -1,0 +1,4 @@
+# Core harness uses only the standard library (Python 3.10+).
+# Install only what the providers you run need:
+requests>=2.31          # openai / deepgram providers
+# faster-whisper>=1.0   # local Whisper-family models
