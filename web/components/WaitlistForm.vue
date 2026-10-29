@@ -1,4 +1,6 @@
 <script setup lang="ts">
+withDefaults(defineProps<{ tone?: 'light' | 'dark' }>(), { tone: 'light' })
+
 const { t, locale } = useCopy()
 const { public: { apiBase } } = useRuntimeConfig()
 
@@ -24,18 +26,26 @@ async function submit() {
 </script>
 
 <template>
-  <div class="cta-row" id="join">
+  <div class="waitlist-wrap" :class="`tone-${tone}`">
     <form class="waitlist" @submit.prevent="submit">
-      <input v-model="email" type="email" required autocomplete="email" :placeholder="t.emailPh" :aria-label="t.emailPh" />
-      <select v-model="useCase" :aria-label="t.useCase">
-        <option v-for="(label, key) in t.useCases" :key="key" :value="key">{{ label }}</option>
-      </select>
-      <button class="btn" :disabled="status === 'sending'">{{ status === 'sending' ? t.sending : t.join }}</button>
+      <input
+        v-model="email"
+        class="input"
+        type="email"
+        required
+        autocomplete="email"
+        :placeholder="t.form.emailPh"
+        :aria-label="t.form.emailPh"
+      />
+      <AppSelect v-model="useCase" :options="t.form.useCases" :label="t.form.useCaseLabel" name="use_case" />
+      <button class="btn" :class="tone === 'dark' ? 'btn-light' : 'btn-primary'" :disabled="status === 'sending'">
+        {{ status === 'sending' ? t.form.sending : t.form.join }}
+      </button>
     </form>
     <p class="form-msg" :class="status" role="status" aria-live="polite">
-      <template v-if="status === 'ok'">{{ t.ok }}</template>
-      <template v-else-if="status === 'err'">{{ t.err }}</template>
+      <template v-if="status === 'ok'">{{ t.form.ok }}</template>
+      <template v-else-if="status === 'err'">{{ t.form.err }}</template>
     </p>
-    <p class="fineprint">{{ t.fine }}</p>
+    <p class="fineprint">{{ t.form.fine }}</p>
   </div>
 </template>

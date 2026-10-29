@@ -25,3 +25,9 @@ Tests: `cd api && php artisan test`.
 - Web: `npm run generate` outputs a static site (`web/.output/public`); set `NUXT_PUBLIC_API_BASE` at build time.
 - API: set `APP_ENV=production`, `APP_DEBUG=false`, a real DB, and `CORS_ALLOWED_ORIGINS` to your web origin(s).
 - Export signups: `php artisan tinker --execute='echo App\Models\WaitlistEntry::pluck("email")->implode("\n");'`
+
+## Docs
+
+- [PLANNING.md](./PLANNING.md): product and technical plan
+- [ROADMAP.md](./ROADMAP.md): phases and status
+- [DESIGN_PHILOSOPHY.md](./DESIGN_PHILOSOPHY.md): UI design rules (read before any UI work)
