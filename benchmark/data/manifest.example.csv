@@ -1,0 +1,4 @@
+id,audio,reference,category,duration_sec
+meet-001,audio/meet-001.wav,refs/meet-001.txt,meeting-codeswitch,
+lec-001,audio/lec-001.mp3,refs/lec-001.txt,lecture,
+noisy-001,audio/noisy-001.m4a,refs/noisy-001.txt,noisy-cafe,
