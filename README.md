@@ -5,7 +5,7 @@ AI note-taker for Vietnamese meetings, lectures and videos. **Status: in progres
 | Dir    | Stack            | Purpose                                  |
 | ------ | ---------------- | ---------------------------------------- |
 | `web/` | Nuxt 3           | Landing page (vi/en) + waitlist form     |
-| `api/` | Laravel 12 (PHP 8.2+) | `POST /api/waitlist` (SQLite by default) |
+| `api/` | Laravel 12 (PHP 8.2+) | `POST /v1/waitlist` (SQLite by default) |
 
 ## Run locally
 

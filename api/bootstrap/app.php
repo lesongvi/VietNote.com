@@ -10,6 +10,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         api: __DIR__.'/../routes/api.php',
+        // The host is already api.vietnote.com, so routes are versioned rather than re-prefixed with /api.
+        apiPrefix: 'v1',
         commands: __DIR__.'/../routes/console.php',
         then: function () {
             // Laravel's built-in health route renders a Blade page; this one answers in JSON.
