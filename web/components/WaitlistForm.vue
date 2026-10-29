@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import { ArrowRight } from 'lucide-vue-next'
+
 withDefaults(defineProps<{ tone?: 'light' | 'dark' }>(), { tone: 'light' })
 
 const { t, locale } = useCopy()
 const { public: { apiBase } } = useRuntimeConfig()
+const uid = useId()
 
 const email = ref('')
 const useCase = ref('')
@@ -28,18 +31,17 @@ async function submit() {
 <template>
   <div class="waitlist-wrap" :class="`tone-${tone}`">
     <form class="waitlist" @submit.prevent="submit">
-      <input
-        v-model="email"
-        class="input"
-        type="email"
-        required
-        autocomplete="email"
-        :placeholder="t.form.emailPh"
-        :aria-label="t.form.emailPh"
-      />
-      <AppSelect v-model="useCase" :options="t.form.useCases" :label="t.form.useCaseLabel" name="use_case" />
-      <button class="btn" :class="tone === 'dark' ? 'btn-light' : 'btn-primary'" :disabled="status === 'sending'">
+      <div class="field">
+        <label :for="`${uid}-email`">{{ t.form.emailLabel }}</label>
+        <input :id="`${uid}-email`" v-model="email" class="input" type="email" required autocomplete="email" :placeholder="t.form.emailPh" />
+      </div>
+      <div class="field">
+        <span :id="`${uid}-uc`" class="field-label">{{ t.form.useCaseTitle }}</span>
+        <AppSelect v-model="useCase" :options="t.form.useCases" :label="t.form.useCaseLabel" name="use_case" />
+      </div>
+      <button class="btn" :class="tone === 'dark' ? 'btn-paper' : 'btn-ink'" :disabled="status === 'sending'">
         {{ status === 'sending' ? t.form.sending : t.form.join }}
+        <ArrowRight :size="18" aria-hidden="true" />
       </button>
     </form>
     <p class="form-msg" :class="status" role="status" aria-live="polite">
